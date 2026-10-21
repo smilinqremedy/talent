@@ -1,6 +1,6 @@
 # Python Internals & Mental Models
 
-A foundational curriculum explaining how Python works under the hood—from high-level abstractions and memory management down to CPython compilation, bytecode, the Python Virtual Machine (PVM), dynamic type semantics, the Data & AI ecosystem, and the engineering trade-off between execution speed and implementation velocity.
+A foundational curriculum explaining how computers and programming languages work under the hood—from kernels, shells, terminals, and memory management down to CPython compilation, bytecode, the Python Virtual Machine (PVM), dynamic type semantics, the Data & AI ecosystem, and the engineering trade-off between execution speed and implementation velocity.
 
 ---
 
@@ -48,7 +48,19 @@ A foundational curriculum explaining how Python works under the hood—from high
    - [When Python is the Right Choice vs. When Execution Speed Dominates](#when-python-is-the-right-choice-vs-when-execution-speed-dominates)
    - [Common Mistakes and Misconceptions](#module-5-common-mistakes-and-misconceptions)
    - [Demonstrations in Code](#module-5-code-demonstrations)
-6. [Running the Demonstration Scripts](#running-the-demonstration-scripts)
+6. [Module 6: The Computer Has a Manager — Kernel, Shell, and Terminal](#module-6-the-computer-has-a-manager--kernel-shell-and-terminal)
+   - [The Kernel: Core System Manager](#the-kernel-core-system-manager)
+   - [The Translator: The Shell](#the-translator-the-shell)
+   - [The Lagos Mechanic Workshop Analogy](#the-lagos-mechanic-workshop-analogy)
+   - [Terminal Emulator vs. Shell](#terminal-emulator-vs-shell)
+   - [Why Programmers Use the Shell](#why-programmers-use-the-shell)
+   - [The Abuja Data Analyst Scenario](#the-abuja-data-analyst-scenario)
+   - [How the Shell Communicates with the Kernel (The REPL Loop)](#how-the-shell-communicates-with-the-kernel-the-repl-loop)
+   - [The Command Prompt and Searching $PATH](#the-command-prompt-and-searching-path)
+   - [Bash as a Full Programming Environment](#bash-as-a-full-programming-environment)
+   - [Common Mistakes and Misconceptions](#module-6-common-mistakes-and-misconceptions)
+   - [Demonstrations in Code](#module-6-code-demonstrations)
+7. [Running the Demonstration Scripts](#running-the-demonstration-scripts)
 
 ---
 
@@ -344,9 +356,74 @@ Run the companion script [`execution_vs_implementation_demo.py`](execution_vs_im
 
 ---
 
+## Module 6: The Computer Has a Manager — Kernel, Shell, and Terminal
+
+### The Kernel: Core System Manager
+Every computer has a core piece of software called the **kernel**. The kernel is the master manager of the whole system:
+- Controls physical memory (RAM).
+- Schedules CPU processes.
+- Manages hardware peripherals, storage devices, and filesystems.
+- Enforces user security and permissions.
+
+### The Translator: The Shell
+You cannot communicate with the kernel in conversational human language. The translator between the user and the kernel is the **shell**.
+The shell is a command interpreter: it accepts text commands, parses them, requests the kernel to execute system operations, and prints the result back to you.
+
+### The Lagos Mechanic Workshop Analogy
+Think of the kernel like the owner of a large mechanic workshop in Lagos:
+- The owner supervises mechanics, tools, heavy vehicle lifts, and diagnostic machines.
+- You do not walk into the workshop and start operating the hydraulic lift yourself.
+- Instead, you speak to the **front-desk manager** (the shell). You tell the manager: *"Please check the tire pressure."*
+- The manager translates that request into action, instructs the mechanic, and reports the results back to you.
+
+### Terminal Emulator vs. Shell
+Many people use the terms interchangeably, but they are strictly distinct:
+- **The Terminal Emulator (The Container):** The graphical window where you type (GNOME Terminal on Linux, Terminal on macOS, Windows Terminal).
+- **The Shell (The Engine):** The program running inside the terminal window (Bash, Zsh, Fish). The terminal passes keystrokes to the shell; the shell interprets commands and writes output back to the terminal screen.
+
+### Why Programmers Use the Shell
+- **Speed & Scale:** Execute operations on thousands of files simultaneously.
+- **Automation:** Chain repetitive tasks into reproducible scripts.
+- **Remote Systems:** Manage headless cloud servers via SSH where no graphical display exists.
+- **Precision:** Direct inspection of processes, ports, memory, and filesystem states.
+
+### The Abuja Data Analyst Scenario
+Imagine a data analyst in Abuja needing to process 2,000 daily sales CSV files from an e-commerce platform. Manually opening and clicking each file in a GUI spreadsheet would take days. In the shell, a single 3-line loop processes, extracts, and summarizes all 2,000 files in seconds.
+
+### How the Shell Communicates with the Kernel (The REPL Loop)
+The shell operates in a continuous **REPL** cycle:
+1. **Read:** Reads the command string typed by the user.
+2. **Evaluate:** Splits arguments, searches `$PATH` for the executable, and asks the kernel to fork and execute the program.
+3. **Print:** Writes program output and errors back to stdout/stderr.
+4. **Loop:** Returns to the command prompt waiting for the next instruction.
+
+### The Command Prompt and Searching $PATH
+When the shell is ready, it presents the prompt (e.g., `user@machine:~$ `):
+- Tells you your username, machine hostname, and current working directory (`~` is the home directory).
+- The trailing `$` indicates a standard user; `#` indicates root/administrator.
+- When you type `ls`, the shell searches each directory in `$PATH` sequentially (`/usr/bin/ls`) to locate the executable binary.
+
+### Bash as a Full Programming Environment
+Bash is not just an interactive prompt; it is a complete scripting language with variables, parameter expansion, arithmetic, loops, conditionals, and functions.
+
+### Module 6 Common Mistakes and Misconceptions
+- **"The terminal is only for hackers":** The shell is for anyone who needs speed, automation, and direct control.
+- **"Typing the wrong command will immediately break the system":** Normal user shells have restricted permissions, protecting core system files from accidental damage.
+- **"The terminal and shell are the same thing":** The terminal is the window; the shell is the interpreter running inside.
+- **"The shell understands conversational English":** The shell requires precise syntax, options (flags), and arguments.
+
+### Module 6 Code Demonstrations
+Run the companion script [`shell_kernel_demo.sh`](shell_kernel_demo.sh) to see:
+- Live kernel inspection (`uname`) vs. shell process inspection (`$SHELL`, `$$`)
+- How the shell searches `$PATH` to resolve executable binaries (`which ls`)
+- Simulated Abuja data analyst batch CSV extraction loop
+- Bash programming features (variables, arithmetic, and conditional logic)
+
+---
+
 ## Running the Demonstration Scripts
 
-Clone the repository and run any module demonstration directly with Python 3:
+Clone the repository and run any module demonstration directly:
 
 ```bash
 # Module 1: Memory management, abstraction & garbage collection
@@ -363,4 +440,7 @@ python3 ecosystem_glue_demo.py
 
 # Module 5: Execution speed vs. implementation speed & live ctypes C-binding
 python3 execution_vs_implementation_demo.py
+
+# Module 6: Kernel, shell, terminal emulator & batch shell automation
+./shell_kernel_demo.sh
 ```
