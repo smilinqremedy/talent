@@ -1,6 +1,6 @@
 # Python Internals & Mental Models
 
-A foundational curriculum explaining how Python works under the hood—from high-level abstractions and memory management down to CPython compilation, bytecode, and the Python Virtual Machine (PVM).
+A foundational curriculum explaining how Python works under the hood—from high-level abstractions and memory management down to CPython compilation, bytecode, the Python Virtual Machine (PVM), and dynamic type semantics.
 
 ---
 
@@ -20,7 +20,16 @@ A foundational curriculum explaining how Python works under the hood—from high
    - [The UN Live Interpreter Analogy](#the-un-live-interpreter-analogy)
    - [Life Cycle of a Python Script](#life-cycle-of-a-python-script)
    - [Demonstrations in Code](#module-2-code-demonstrations)
-3. [Running the Demonstration Scripts](#running-the-demonstration-scripts)
+3. [Module 3: Python Types, Dynamic Typing, and Developer Velocity](#module-3-python-types-dynamic-typing-and-developer-velocity)
+   - [What is a Type?](#what-is-a-type)
+   - [Static Typing vs. Dynamic Typing](#static-typing-vs-dynamic-typing)
+   - [Why Dynamic Typing Speeds Up Development](#why-dynamic-typing-speeds-up-development)
+   - [The Trade-Off: Errors Move to Runtime](#the-trade-off-errors-move-to-runtime)
+   - [Dynamic Typing and Refactoring (Type Hints)](#dynamic-typing-and-refactoring)
+   - [The Real-World Analogy: Fixed Forms vs. Free Notebook](#the-real-world-analogy-fixed-forms-vs-free-notebook)
+   - [Dynamic vs. Weak Typing Misconceptions](#dynamic-vs-weak-typing-misconceptions)
+   - [Demonstrations in Code](#module-3-code-demonstrations)
+4. [Running the Demonstration Scripts](#running-the-demonstration-scripts)
 
 ---
 
@@ -140,14 +149,78 @@ Run the companion script [`cpython_bytecode_demo.py`](cpython_bytecode_demo.py) 
 
 ---
 
+## Module 3: Python Types, Dynamic Typing, and Developer Velocity
+
+### What is a Type?
+A type describes what kind of data a value is:
+- `5` is an integer (`int`).
+- `3.14` is a floating-point number (`float`).
+- `"hello"` is text (`str`).
+- `True` is a boolean (`bool`).
+- `[1, 2, 3]` is an ordered sequence (`list`).
+
+Types matter because operations are constrained by them: you can add two integers or concatenate two strings, but adding an integer to a string raises a `TypeError`.
+
+### Static Typing vs. Dynamic Typing
+- **Static Typing (Java, C, C++):** The programmer declares the variable type explicitly upfront (`int age = 25;`). The type is fixed and verified at compile time.
+- **Dynamic Typing (Python):** You do not declare variable types. Variables are name tags that point to values. The object itself holds the type, and variables can be reassigned to completely different types over time:
+```python
+x = 42        # x refers to an int
+x = "now"     # x now refers to a str
+x = [1, 2, 3] # x now refers to a list
+```
+
+### Why Dynamic Typing Speeds Up Development
+Dynamic typing removes ceremony and boilerplate:
+1. **Rapid Prototyping:** Build working MVPs in hours without designing rigid type hierarchies upfront.
+2. **Interactive Exploration:** Experiment seamlessly in Python shells, REPLs, and Jupyter notebooks.
+3. **Data Pipelines:** Ingest dirty or changing datasets (integers, strings, floats) without rigid conversion models before processing.
+4. **Developer Velocity:** For startups and small teams (such as a logistics company in Lagos shipping a delivery tracker), moving from concept to working prototype rapidly is often far more valuable than raw machine execution speed.
+
+### The Trade-Off: Errors Move to Runtime
+In statically typed languages, the compiler catches type mismatches before any code executes. In Python, type errors surface **only when the offending line executes at runtime**:
+```python
+age = 25
+message = "I am " + age  # Raises TypeError at runtime!
+```
+If this line sits in a rarely-triggered `if` branch, it may hide in production until a customer hits that exact branch. Therefore, dynamic typing demands disciplined testing.
+
+### Dynamic Typing and Refactoring
+In large codebases, Python supports optional type hints (PEP 484):
+```python
+def add_numbers(a: int, b: int) -> int:
+    return a + b
+```
+CPython **does not enforce** these hints at runtime. They serve as metadata (`__annotations__`) for editor autocomplete, documentation, and external static analyzers like `mypy`.
+
+### The Real-World Analogy: Fixed Forms vs. Free Notebook
+- **Static Typing is a Fixed Bank Deposit Slip:** It has strict boxes (Account Number, Amount, Date). You cannot write an account number in the date field. It prevents errors upfront, but requires rigid setup.
+- **Dynamic Typing is a Blank Notepad:** A customer service agent can jot down details quickly and flexibly. It allows tremendous speed, but requires discipline and checks so the notes remain readable and consistent.
+
+### Dynamic vs. Weak Typing Misconceptions
+- **Misconception 1: "Variables have no type"** — Variables have no *fixed* type, but the values they reference always do.
+- **Misconception 2: "Dynamic means Weak"** — Python is dynamically typed but **strongly typed**. It refuses implicit invalid conversions (e.g., `"1" + 2` raises `TypeError` rather than guessing `"12"`).
+
+### Module 3 Code Demonstrations
+Run the companion script [`dynamic_typing_demo.py`](dynamic_typing_demo.py) to see:
+- Variable re-binding across types (`type()`, `id()`)
+- Strong typing enforcement vs. weak typing
+- Latent bugs in rarely-executed code paths
+- Inspecting function annotations (`__annotations__`) vs. runtime behavior
+
+---
+
 ## Running the Demonstration Scripts
 
-Clone the repository and run both modules directly in any standard Python 3 environment:
+Clone the repository and run any module demonstration directly with Python 3:
 
 ```bash
-# Run Module 1: Memory management, abstraction & garbage collection
+# Module 1: Memory management, abstraction & garbage collection
 python3 memory_model_demo.py
 
-# Run Module 2: CPython compilation, bytecode disassembly & PVM execution
+# Module 2: CPython compilation, bytecode disassembly & PVM execution
 python3 cpython_bytecode_demo.py
+
+# Module 3: Dynamic typing, strong typing & runtime type semantics
+python3 dynamic_typing_demo.py
 ```
