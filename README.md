@@ -1,6 +1,6 @@
 # Python Internals & Mental Models
 
-A foundational curriculum explaining how computers and programming languages work under the hood—from kernels, shells, terminals, and memory management down to CPython compilation, bytecode, the Python Virtual Machine (PVM), dynamic type semantics, the Data & AI ecosystem, and the engineering trade-off between execution speed and implementation velocity.
+A foundational curriculum explaining how computers and programming languages work under the hood—from kernels, shells, terminals, and filesystem trees down to CPython compilation, bytecode, the Python Virtual Machine (PVM), dynamic type semantics, the Data & AI ecosystem, and the engineering trade-off between execution speed and implementation velocity.
 
 ---
 
@@ -60,7 +60,18 @@ A foundational curriculum explaining how computers and programming languages wor
    - [Bash as a Full Programming Environment](#bash-as-a-full-programming-environment)
    - [Common Mistakes and Misconceptions](#module-6-common-mistakes-and-misconceptions)
    - [Demonstrations in Code](#module-6-code-demonstrations)
-7. [Running the Demonstration Scripts](#running-the-demonstration-scripts)
+7. [Module 7: The File System is a Tree — Paths, Navigation, and Working Directories](#module-7-the-file-system-is-a-tree--paths-navigation-and-working-directories)
+   - [The Lagos Estate Mental Model](#the-lagos-estate-mental-model)
+   - [Absolute Paths: Full Coordinates from Root](#absolute-paths-full-coordinates-from-root)
+   - [Relative Paths: Directions from Current Position](#relative-paths-directions-from-current-position)
+   - [Current Working Directory and the pwd Command](#current-working-directory-and-the-pwd-command)
+   - [Special Symbols: . (Here) and .. (Parent Directory)](#special-symbols--here-and--parent-directory)
+   - [The Home Directory and the ~ Shortcut](#the-home-directory-and-the--shortcut)
+   - [The Abuja Postal Analogy](#the-abuja-postal-analogy)
+   - [Traversing the Tree with cd](#traversing-the-tree-with-cd)
+   - [Common Mistakes and Misconceptions](#module-7-common-mistakes-and-misconceptions)
+   - [Demonstrations in Code](#module-7-code-demonstrations)
+8. [Running the Demonstration Scripts](#running-the-demonstration-scripts)
 
 ---
 
@@ -421,6 +432,68 @@ Run the companion script [`shell_kernel_demo.sh`](shell_kernel_demo.sh) to see:
 
 ---
 
+## Module 7: The File System is a Tree — Paths, Navigation, and Working Directories
+
+### The Lagos Estate Mental Model
+Every file lives in a directory (folder). Directories can contain files and other directories, forming an upside-down tree structure:
+- **Root (`/`):** The estate main entrance gate.
+- **Directories:** The roads, streets, and houses inside the estate.
+- **Files:** Specific documents, books, or items stored inside individual rooms.
+
+### Absolute Paths: Full Coordinates from Root
+An absolute path specifies the complete address from the file system root (`/`). It does not depend on where your shell is currently located:
+```bash
+/home/amaka/documents/report.txt
+```
+> **The Victoria Island Address Analogy:** An absolute path is like giving a complete postal address: *"No. 15, Adeola Odeku Street, Victoria Island, Lagos"*. Anyone starting from anywhere in Nigeria can follow it to the exact house.
+
+### Relative Paths: Directions from Current Position
+A relative path gives coordinates relative to your current working directory. It never begins with a leading `/`:
+```bash
+documents/report.txt
+```
+> **The Local Directions Analogy:** A relative path is like saying: *"Go into the room on your right"*. That direction only works if the person is already standing inside the correct house. If they stand in a different compound, the instructions fail.
+
+### Current Working Directory and the pwd Command
+Every process has an active location. Relative paths are evaluated against this directory.
+- `pwd` (**P**rint **W**orking **D**irectory) outputs the absolute path of your current location.
+- Always run `pwd` before using relative paths to ensure your context is correct.
+
+### Special Symbols: . (Here) and .. (Parent Directory)
+- `.` (**Single Dot**): Refers to the current directory ("here"). Used to execute local scripts explicitly: `./script.py`.
+- `..` (**Double Dots**): Refers to the parent directory ("one level up toward root"). Can be chained (`cd ../..`) to navigate multiple levels up.
+
+### The Home Directory and the ~ Shortcut
+Every user account has a private workspace:
+- On Linux: `/home/<username>`.
+- The shell provides the `~` (tilde) shortcut to reference your home directory from anywhere.
+- `cd ~` returns home instantly; `cd ~/projects` enters your projects folder regardless of your current location.
+
+### The Abuja Postal Analogy
+- **Absolute Address:** *"Plot 12, Aguiyi Ironsi Street, Maitama, Abuja"* — delivers reliably regardless of which post office processes it.
+- **Relative Direction:** *"Turn left at the next junction and enter the 4th house"* — fails completely if the postal worker starts from the wrong junction.
+
+### Traversing the Tree with cd
+- Move down: `cd ai_projects/data`
+- Move up: `cd ..`
+- Move home: `cd ~`
+- Move to root: `cd /`
+
+### Module 7 Common Mistakes and Misconceptions
+- **Slashes (`/` vs `\`):** Linux/macOS strictly use forward slashes `/`. Windows historically used backslashes `\`.
+- **Typing relative paths from the wrong directory:** Results in `No such file or directory`.
+- **Confusing `~` with `/`:** `/` is the root of the entire disk; `~` is your personal user space.
+- **Confusing `.` with `..`:** `.` means "here"; `..` means "one level up".
+
+### Module 7 Code Demonstrations
+Run the companion script [`filesystem_tree_demo.sh`](filesystem_tree_demo.sh) to see:
+- Visualizing directory hierarchies with `pwd`
+- Direct comparison showing why relative paths fail when `pwd` changes
+- Stepping through `.`, `..`, and chained `../..` navigation
+- Navigating between root (`/`) and home (`~`)
+
+---
+
 ## Running the Demonstration Scripts
 
 Clone the repository and run any module demonstration directly:
@@ -443,4 +516,7 @@ python3 execution_vs_implementation_demo.py
 
 # Module 6: Kernel, shell, terminal emulator & batch shell automation
 ./shell_kernel_demo.sh
+
+# Module 7: Filesystem tree, absolute vs. relative paths, pwd, ., .., and ~
+./filesystem_tree_demo.sh
 ```
